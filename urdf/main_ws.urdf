@@ -36,7 +36,7 @@
     </collision>
   </link>
   <joint name="table_joint" type="fixed">
-    <origin rpy="0 0 0" xyz="0 1.317 0"/>
+    <origin rpy="3.14 0 0" xyz="0 1.317 0"/>
     <parent link="world"/>
     <child link="table"/>
   </joint>
