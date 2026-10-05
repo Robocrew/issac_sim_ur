@@ -4,16 +4,13 @@ project(robot_description)
 find_package(ament_cmake REQUIRED)
 
 install(
-  DIRECTORY meshes robot table_clamp
+  DIRECTORY meshes robot table_clamp urdf
   DESTINATION share/${PROJECT_NAME}
 )
 
 install(
   FILES
-    env.urdf
-    robot.urdf
     robot_lula.yaml
-    table_clamp.urdf
   DESTINATION share/${PROJECT_NAME}
 )
 

@@ -1,0 +1,8 @@
+[31mCMake Error at ament_cmake_symlink_install/ament_cmake_symlink_install.cmake:163 (message):
+  ament_cmake_symlink_install_files() can't find
+  '/home/faps/isaacsim_ros2/src/robot_description/env.urdf'
+Call Stack (most recent call first):
+  ament_cmake_symlink_install/ament_cmake_symlink_install.cmake:322 (ament_cmake_symlink_install_files)
+  cmake_install.cmake:46 (include)
+
+[0m
