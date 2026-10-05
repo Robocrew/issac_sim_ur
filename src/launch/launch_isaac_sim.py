@@ -11,9 +11,8 @@ import carb
 import omni.usd
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-URDF_ROOT = PROJECT_ROOT / "urdf"
-COMBINED_STAGE = URDF_ROOT / "main_ws" / "configuration" / "ur_ws.usd"
+ASSET_ROOT = Path(__file__).resolve().parents[1]
+COMBINED_STAGE = ASSET_ROOT / "main_ws" / "configuration" / "ur_ws.usd"
 
 
 def get_stage_path() -> Path:
