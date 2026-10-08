@@ -260,7 +260,7 @@
   </gazebo>
   <ros2_control name="coil_assembly_coil_system" type="system">
     <hardware>
-      <plugin>mock_components/GenericSystem</plugin>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
     </hardware>
     <joint name="coil_assembly_coil_continuous_joint">
       <command_interface name="position"/>
@@ -439,7 +439,7 @@
   </joint>
   <ros2_control name="clamp_stator_system" type="system">
     <hardware>
-      <plugin>mock_components/GenericSystem</plugin>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
     </hardware>
     <joint name="clamp_stator_mount_joint">
       <command_interface name="position"/>
@@ -474,76 +474,83 @@
      </joint>
       -->
   <!-- </xacro:if> -->
+  <ros2_control name="ur" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+      <param name="use_mimic_suffix">false</param>
+    </hardware>
+    <joint name="shoulder_pan_joint">
+      <command_interface name="position"/>
+      <command_interface name="velocity"/>
+      <state_interface name="position">
+        <!-- initial position for the FakeSystem and simulation -->
+        <param name="initial_value">0.0872664626</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="shoulder_lift_joint">
+      <command_interface name="position"/>
+      <command_interface name="velocity"/>
+      <state_interface name="position">
+        <!-- initial position for the FakeSystem and simulation -->
+        <param name="initial_value">-1.8325957146</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="elbow_joint">
+      <command_interface name="position"/>
+      <command_interface name="velocity"/>
+      <state_interface name="position">
+        <!-- initial position for the FakeSystem and simulation -->
+        <param name="initial_value">1.8849555922</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="wrist_1_joint">
+      <command_interface name="position"/>
+      <command_interface name="velocity"/>
+      <state_interface name="position">
+        <!-- initial position for the FakeSystem and simulation -->
+        <param name="initial_value">-2.5307274154</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="wrist_2_joint">
+      <command_interface name="position"/>
+      <command_interface name="velocity"/>
+      <state_interface name="position">
+        <!-- initial position for the FakeSystem and simulation -->
+        <param name="initial_value">-1.343903524</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="wrist_3_joint">
+      <command_interface name="position"/>
+      <command_interface name="velocity"/>
+      <state_interface name="position">
+        <!-- initial position for the FakeSystem and simulation -->
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <!-- Expose only the actuated RG2 joint in ros2_control.
+               The dependent joints are handled via URDF mimic and Gazebo mimic plugin. -->
+    <joint name="rg2_gripper_finger_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+  </ros2_control>
   <!-- Add URDF transmission elements (for ros_control) -->
   <!--<xacro:ur_arm_transmission prefix="${prefix}" hw_interface="${transmission_hw_interface}" />-->
   <!-- Placeholder for ros2_control transmission which don't yet exist -->
   <!-- links -  main serial chain -->
-  <ros2_control name="ur" type="system">
-  <hardware>
-    <plugin>mock_components/GenericSystem</plugin>
-  </hardware>
-  <joint name="shoulder_pan_joint">
-    <command_interface name="position"/>
-    <command_interface name="velocity"/>
-    <state_interface name="position">
-      <param name="initial_value">0.0872664626</param>
-    </state_interface>
-    <state_interface name="velocity"/>
-    <state_interface name="effort"/>
-  </joint>
-  <joint name="shoulder_lift_joint">
-    <command_interface name="position"/>
-    <command_interface name="velocity"/>
-    <state_interface name="position">
-      <param name="initial_value">-1.8325957146</param>
-    </state_interface>
-    <state_interface name="velocity"/>
-    <state_interface name="effort"/>
-  </joint>
-  <joint name="elbow_joint">
-    <command_interface name="position"/>
-    <command_interface name="velocity"/>
-    <state_interface name="position">
-      <param name="initial_value">1.8849555922</param>
-    </state_interface>
-    <state_interface name="velocity"/>
-    <state_interface name="effort"/>
-  </joint>
-  <joint name="wrist_1_joint">
-    <command_interface name="position"/>
-    <command_interface name="velocity"/>
-    <state_interface name="position">
-      <param name="initial_value">-2.5307274154</param>
-    </state_interface>
-    <state_interface name="velocity"/>
-    <state_interface name="effort"/>
-  </joint>
-  <joint name="wrist_2_joint">
-    <command_interface name="position"/>
-    <command_interface name="velocity"/>
-    <state_interface name="position">
-      <param name="initial_value">-1.343903524</param>
-    </state_interface>
-    <state_interface name="velocity"/>
-    <state_interface name="effort"/>
-  </joint>
-  <joint name="wrist_3_joint">
-    <command_interface name="position"/>
-    <command_interface name="velocity"/>
-    <state_interface name="position">
-      <param name="initial_value">0.0</param>
-    </state_interface>
-    <state_interface name="velocity"/>
-    <state_interface name="effort"/>
-  </joint>
-  <joint name="rg2_gripper_finger_joint">
-    <state_interface name="position">
-      <param name="initial_value">0.0</param>
-    </state_interface>
-    <state_interface name="velocity"/>
-  </joint>
-</ros2_control>
-
   <link name="base_link"/>
   <link name="base_link_inertia">
     <visual>
@@ -954,8 +961,45 @@
     <parent link="camera_mount_link"/>
     <child link="camera_gazebo_link"/>
   </joint>
-
-
+  <gazebo reference="camera_gazebo_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
+  <gazebo reference="camera_gazebo_link">
+    <sensor name="camera_d435i" type="depth">
+      <always_on>true</always_on>
+      <visualize>false</visualize>
+      <update_rate>30</update_rate>
+      <pose>0.0106 0.0175 0.0125 -1.5707963267948966 0 -1.5707963267948966</pose>
+      <camera>
+        <horizontal_fov>1.5184</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.1</near>
+          <far>10.0</far>
+        </clip>
+      </camera>
+      <plugin filename="libgazebo_ros_camera.so" name="camera_controller">
+        <ros/>
+        <camera_name>camera</camera_name>
+        <frame_name>camera_depth_optical_frame</frame_name>
+        <hack_baseline>0.07</hack_baseline>
+        <min_depth>0.1</min_depth>
+        <max_depth>10.0</max_depth>
+      </plugin>
+    </sensor>
+  </gazebo>
+  <!-- Gazebo plugins -->
+  <gazebo reference="world">
+    </gazebo>
+  <gazebo>
+    <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+      <parameters>/home/faps/ros_2/workspace_ur_ros2/install/ur10e_gazebo_sim/share/ur10e_gazebo_sim/config/ur10e_controllers_ft_rg2.yaml</parameters>
+    </plugin>
+  </gazebo>
   <!-- Connection for FT sensor and RG2 gripper -->
   <link name="adapter_plate_link">
     <visual>
@@ -1021,7 +1065,31 @@
     <origin rpy="0 0 1.57079632679" xyz="0 0 0.0375"/>
   </joint>
   <link name="tool_mount_link"/>
-
+  <ros2_control name="NetFtHardwareInterface" type="sensor">
+    <hardware>
+      <plugin>net_ft_driver/NetFtHardwareInterface</plugin>
+      <param name="sensor_type">onrobot</param>
+      <param name="ip_address">192.168.1.1</param>
+      <param name="rdt_sampling_rate">500</param>
+      <param name="internal_filter_rate">0</param>
+      <param name="use_hardware_biasing">False</param>
+    </hardware>
+    <sensor name="tcp_fts_sensor">
+      <state_interface name="force.x"/>
+      <state_interface name="force.y"/>
+      <state_interface name="force.z"/>
+      <state_interface name="torque.x"/>
+      <state_interface name="torque.y"/>
+      <state_interface name="torque.z"/>
+      <param name="frame_id">tool_link</param>
+    </sensor>
+    <gpio name="diagnostic">
+      <state_interface name="packet_count"/>
+      <state_interface name="lost_packets"/>
+      <state_interface name="out_of_order_count"/>
+      <state_interface name="status"/>
+    </gpio>
+  </ros2_control>
   <link name="rg2_gripper_base_link">
     <inertial>
       <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
@@ -1317,7 +1385,53 @@
     <child link="tcp_nozzle_tip"/>
     <origin rpy="0 1.5708 1.5708" xyz="0 0.04885 0.035"/>
   </joint>
-  
+  <!-- <gazebo>
+      <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+        <robotNamespace>/onrobot_rg2</robotNamespace>
+        <robotSimType>gazebo_ros2_control/DefaultRobotHWSim</robotSimType>
+      </plugin> 
+    </gazebo>
+
+    <xacro:if value="${sim_gazebo}">
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </xacro:if> -->
+  <gazebo>
+    <plugin filename="libroboticsgroup_upatras_gazebo_mimic_joint_plugin.so" name="mimic_rg2_gripper_left_inner_knuckle_joint">
+      <joint>rg2_gripper_finger_joint</joint>
+      <mimicJoint>rg2_gripper_left_inner_knuckle_joint_mimic</mimicJoint>
+      <multiplier>-1.0</multiplier>
+      <offset>0.0</offset>
+      <maxEffort>5.0</maxEffort>
+    </plugin>
+    <plugin filename="libroboticsgroup_upatras_gazebo_mimic_joint_plugin.so" name="mimic_rg2_gripper_right_inner_knuckle_joint">
+      <joint>rg2_gripper_finger_joint</joint>
+      <mimicJoint>rg2_gripper_right_inner_knuckle_joint_mimic</mimicJoint>
+      <multiplier>-1.0</multiplier>
+      <offset>0.0</offset>
+      <maxEffort>5.0</maxEffort>
+    </plugin>
+    <plugin filename="libroboticsgroup_upatras_gazebo_mimic_joint_plugin.so" name="mimic_rg2_gripper_left_inner_finger_joint">
+      <joint>rg2_gripper_finger_joint</joint>
+      <mimicJoint>rg2_gripper_left_inner_finger_joint_mimic</mimicJoint>
+      <multiplier>1.0</multiplier>
+      <offset>0.0</offset>
+      <maxEffort>5.0</maxEffort>
+    </plugin>
+    <plugin filename="libroboticsgroup_upatras_gazebo_mimic_joint_plugin.so" name="mimic_rg2_gripper_right_inner_finger_joint">
+      <joint>rg2_gripper_finger_joint</joint>
+      <mimicJoint>rg2_gripper_right_inner_finger_joint_mimic</mimicJoint>
+      <multiplier>1.0</multiplier>
+      <offset>0.0</offset>
+      <maxEffort>5.0</maxEffort>
+    </plugin>
+    <plugin filename="libroboticsgroup_upatras_gazebo_mimic_joint_plugin.so" name="mimic_rg2_gripper_right_outer_knuckle_joint">
+      <joint>rg2_gripper_finger_joint</joint>
+      <mimicJoint>rg2_gripper_right_outer_knuckle_joint_mimic</mimicJoint>
+      <multiplier>-1.0</multiplier>
+      <offset>0.0</offset>
+      <maxEffort>5.0</maxEffort>
+    </plugin>
+  </gazebo>
   <link name="slot_tcp"/>
   <joint name="tool_mount_to_slot_tcp" type="fixed">
     <!-- Keep the TCP used by MoveIt/Servo exactly at the physical tape outlet.
