@@ -7,7 +7,11 @@ from isaacsim import SimulationApp
 
 simulation_app = SimulationApp({"headless": False})
 
-import carb
+from isaacsim.core.utils.extensions import enable_extension
+
+enable_extension("isaacsim.ros2.bridge")
+
+import omni.timeline
 import omni.usd
 
 
@@ -21,21 +25,6 @@ def get_stage_path() -> Path:
     return COMBINED_STAGE
 
 
-def wait_for_stage_load(app: SimulationApp, timeout_frames: int = 600) -> None:
-    context = omni.usd.get_context()
-    for frame in range(timeout_frames):
-        loading, total = context.get_stage_loading_status()
-        if total == 0:
-            break
-        app.update()
-
-    else:
-        carb.log_warn(
-            "Stage did not finish loading within the timeout; "
-            "assets may still be resolving."
-        )
-
-
 def main() -> None:
     combined_stage = get_stage_path()
     print(f"Opening USD stage: {combined_stage}", flush=True)
@@ -47,9 +36,11 @@ def main() -> None:
     if not result:
         raise RuntimeError(f"Failed to open stage: {combined_stage}")
 
+    omni.timeline.get_timeline_interface().play()
+
     print("Simulation started. Close the window or press Ctrl+C to stop.", flush=True)
     try:
-        while simulation_app.is_running():
+        while simulation_app.app.is_running():
             simulation_app.update()
     except KeyboardInterrupt:
         print("Interrupted by user.")
